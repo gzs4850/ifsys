@@ -43,7 +43,7 @@ def main():
     log_level = getattr(logging, "DEBUG")
     logging.basicConfig(level=log_level)
     report_name = None
-    testset_paths = ["tests\\data\\demo_testset_hardcode.yml"]
+    testset_paths = ["tests\\data\\"]
 
     for testset_path in testset_paths:
 
@@ -54,6 +54,6 @@ def main():
         kwargs = {
             "output": output_folder_name,
             "report_name": report_name,
-            "failfast": True
+            "failfast": False
         }
         PyUnitReport.HTMLTestRunner(**kwargs).run(task_suite)
