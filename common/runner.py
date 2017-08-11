@@ -3,6 +3,7 @@ import requests
 from common import exception, response
 from common.client import HttpSession
 from common.context import Context
+from ifsys import addResult
 
 
 class Runner(object):
@@ -97,6 +98,9 @@ class Runner(object):
         for _ in range(run_times):
             resp = self.http_client_session.request(url=url, method=method, **parsed_request)
             resp_obj = response.ResponseObject(resp)
+
+            addResult(1, testcase.get("name"), resp_obj.success, resp.status_code, resp.request.url, resp.request.headers,
+                      resp.request.body, resp.headers, resp.content)
 
             extracted_variables_mapping_list = resp_obj.extract_response(extract_binds)
             self.context.bind_variables(extracted_variables_mapping_list, level="testset")

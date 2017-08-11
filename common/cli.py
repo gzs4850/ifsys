@@ -43,7 +43,7 @@ def main():
     log_level = getattr(logging, "DEBUG")
     logging.basicConfig(level=log_level)
     report_name = None
-    testset_paths = ["tests\\data\\"]
+    testset_paths = ["tests\\data\\demo_testset.yml"]
 
     for testset_path in testset_paths:
 
