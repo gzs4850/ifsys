@@ -14,7 +14,7 @@ except NameError:
     PYTHON_VERSION = 3
     import urllib.parse as urllib
 
-SECRET_KEY = "DebugTalk"
+SECRET_KEY = "ZLST"
 
 def gen_random_string(str_len):
     random_char_list = []
@@ -35,7 +35,7 @@ def get_sign(*args):
     return sign
 
 get_sign_lambda = lambda *args: hmac.new(
-    'DebugTalk'.encode('ascii'),
+    'ZLST'.encode('ascii'),
     ''.join(args).encode('ascii'),
     hashlib.sha1).hexdigest()
 

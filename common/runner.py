@@ -1,10 +1,17 @@
+#encoding:utf-8
+
+import datetime
 import requests
 
 from common import exception, response
 from common.client import HttpSession
 from common.context import Context
-from ifsys import addResult
 
+from models import Result
+from dbutil import MysqldbHelper
+
+result = Result()
+db = MysqldbHelper()
 
 class Runner(object):
 
@@ -91,6 +98,12 @@ class Runner(object):
         except KeyError:
             raise exception.ParamsError("URL or METHOD missed!")
 
+        #print parsed_request
+        if parsed_request.get("files"):
+            for key in parsed_request.get("files"):
+                parsed_request.get("files")[key] = [None, parsed_request.get("files")[key]]
+        #print parsed_request
+
         run_times = int(testcase.get("times", 1))
         extract_binds = testcase.get("extract_binds", {})
         validators = testcase.get("validators", [])
@@ -99,14 +112,23 @@ class Runner(object):
             resp = self.http_client_session.request(url=url, method=method, **parsed_request)
             resp_obj = response.ResponseObject(resp)
 
-            addResult(1, testcase.get("name"), resp_obj.success, resp.status_code, resp.request.url, resp.request.headers,
-                      resp.request.body, resp.headers, resp.content)
-
             extracted_variables_mapping_list = resp_obj.extract_response(extract_binds)
             self.context.bind_variables(extracted_variables_mapping_list, level="testset")
 
             diff_content_list = resp_obj.validate(
                 validators, self.context.get_testcase_variables_mapping())
+
+            testResult = 0
+            mockid = _ + 1
+            casename = testcase.get("name")
+            if not diff_content_list:
+                testResult = 1
+            sql = "insert into auto_result(mockid,name,testresult,rspcode,reqpath,reqhead,reqbody,rsphead,rspbody,ts) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            params = (
+            mockid, casename, testResult, resp.status_code, resp.request.url, resp.request.headers, resp.request.body,
+            resp.headers, resp.content, datetime.datetime.now())
+            count = db.updateByParam(sql, params)
+            print count
 
         return resp_obj.success, diff_content_list
 

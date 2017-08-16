@@ -1,7 +1,8 @@
+#encoding:utf-8
+
 import copy
 import importlib
 import os
-import re
 import sys
 import types
 from collections import OrderedDict

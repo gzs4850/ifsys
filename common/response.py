@@ -1,5 +1,8 @@
-from common import utils, exception
+#encoding:utf-8
+from dbutil import MysqldbHelper
+from common import exception, utils
 
+db = MysqldbHelper()
 
 class ResponseObject(object):
 
@@ -101,6 +104,16 @@ class ResponseObject(object):
 
             if "expected" not in validator_dict or "check" not in validator_dict:
                 raise exception.ParamsError("expected not specified in validator")
+
+            # 解析sql语句并查询到相应值
+            expect = validator_dict["expected"]
+            if type(expect) == str and expect.startswith('sql'):
+                expect = expect.split(':')[1]
+                field = expect.split(" ")[1]
+                count = db.selectdev(expect)
+                for row in count:
+                    #print row[field]
+                    validator_dict["expected"] = row[field]
 
             validator_key = validator_dict["check"]
             try:

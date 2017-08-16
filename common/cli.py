@@ -1,11 +1,12 @@
-import os
-import argparse
+#encoding:utf-8
+
 import logging
+import os
 
 import PyUnitReport
 
-from common import __version__
 from common.task import create_task
+
 
 def main():
     """ parse command line options and run commands.
@@ -43,7 +44,9 @@ def main():
     log_level = getattr(logging, "DEBUG")
     logging.basicConfig(level=log_level)
     report_name = None
-    testset_paths = ["tests\\data\\demo_testset.yml"]
+    testset_paths = ["tests\\data\\demo_department.yml"]
+    #testset_paths = ["tests\\data\\demo_testset.yml"]
+
 
     for testset_path in testset_paths:
 

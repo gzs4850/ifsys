@@ -1,10 +1,9 @@
-import hashlib
-import hmac
 import json
 from functools import wraps
 
-from common import utils
 from flask import Flask, make_response, request
+
+from common import utils
 
 app = Flask(__name__)
 

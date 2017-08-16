@@ -1,3 +1,5 @@
+#encoding:utf-8
+
 import hashlib
 import hmac
 import json
@@ -7,6 +9,11 @@ import re
 import string
 
 import yaml
+
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 from common.exception import ParamsError
 
 try:

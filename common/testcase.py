@@ -1,7 +1,8 @@
+#encoding:utf-8
+
 import ast
 import re
 
-from common import utils
 from common.exception import ParamsError
 
 variable_regexp = r"\$([\w_]+)"

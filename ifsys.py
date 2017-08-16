@@ -1,10 +1,9 @@
-#encoding:utf-8
-import json
+# encoding:utf-8
 
 from flask import Flask, jsonify, render_template
 
-from models import Result,db
 import config
+from models import Result, db
 
 app = Flask(__name__)
 app.config.from_object(config)
@@ -14,9 +13,11 @@ app.config.from_object(config)
 def hello_world():
     return render_template("login.html")
 
+
 @app.route('/caselist')
 def caselist():
     return render_template("testset.html")
+
 
 @app.route('/getResult')
 def getResult():
@@ -38,12 +39,13 @@ def getResult():
     resp = jsonify(resultlist)
     return resp
 
+
 @app.route('/getResult/<id>')
 def getResultByID(id):
     result = Result.query.filter(Result.id == id).first()
     data = {
         'name': result.name,
-        'testresult:':result.testresult,
+        'testresult:': result.testresult,
         'url': result.reqpath,
         'reqhead': result.reqhead,
         'reqbody': result.reqbody,
@@ -55,15 +57,18 @@ def getResultByID(id):
     resp = jsonify(data)
     return resp
 
-@app.route('/addResult')
-def addResult1():
-    addResult('2', 'testname', 'True', 200, 'http://127.0.0.1/getResult', '{"Accept":"text/html,application/xhtml+xml,application/xml";"q"="0.9,image/webp,image/apng,*/*";"q"="0.8"}', '{"sign":"7783e85c2ed70224593599fbefdc168a"}',
-              '{"Content-Type":"application/json"}', '{"count":0,"notifications":0,"messages":0}')
-    resp = jsonify({'result':'success'})
-    return resp
+
+# @app.route('/addResult')
+# def addResult1():
+#     addResult('2', 'testname', 'True', 200, 'http://127.0.0.1/getResult',
+#               '{"Accept":"text/html,application/xhtml+xml,application/xml";"q"="0.9,image/webp,image/apng,*/*";"q"="0.8"}',
+#               '{"sign":"7783e85c2ed70224593599fbefdc168a"}',
+#               '{"Content-Type":"application/json"}', '{"count":0,"notifications":0,"messages":0}')
+#     resp = jsonify({'result': 'success'})
+#     return resp
 
 
-def addResult(mockid,name,testresult,rspcode,reqpath,reqhead,reqbody,rsphead,rspbody):
+def addResult(mockid, name, testresult, rspcode, reqpath, reqhead, reqbody, rsphead, rspbody):
     result = Result()
     result.mockid = mockid
     result.name = name
@@ -76,8 +81,6 @@ def addResult(mockid,name,testresult,rspcode,reqpath,reqhead,reqbody,rsphead,rsp
     result.rspbody = rspbody
     db.session.add(result)
     db.session.commit()
-
-
 
 # if __name__ == '__main__':
 #     app.run()

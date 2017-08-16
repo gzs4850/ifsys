@@ -1,3 +1,5 @@
+#encoding:utf-8
+
 import unittest
 
 from common import runner, utils
