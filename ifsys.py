@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.config.from_object(config)
 
 
-@app.route('/')
+@app.route('/hello')
 def hello_world():
     return render_template("login.html")
 
@@ -18,26 +18,51 @@ def hello_world():
 def caselist():
     return render_template("testset.html")
 
-
-@app.route('/getResult')
-def getResult():
-    result = Result.query.all()
+@app.route('/getResult4')
+def getResult4():
+    result = Result.query.order_by(db.desc(Result.ts))
     resultlist = []
     for res in result:
         data = {
             'name': res.name,
+            'result': res.testresult,
+            'reqmethod': res.reqmethod,
+            'rspcode': res.rspcode,
             'url': res.reqpath,
             'reqhead': res.reqhead,
             'reqbody': res.reqbody,
-            'rspcode': res.rspcode,
             'rsphead': res.rsphead,
             'rspbody': res.rspbody,
+            'reason': res.diff,
             'time': res.ts
         }
         resultlist.append(data)
 
     resp = jsonify(resultlist)
     return resp
+
+@app.route('/')
+def getResult(resp=None):
+    # result = Result.query.all()
+    result = Result.query.order_by(db.desc(Result.ts))
+    resultlist = []
+    for res in result:
+        data = {
+            'name': res.name,
+            'result': res.testresult,
+            'reqmethod': res.reqmethod,
+            'rspcode': res.rspcode,
+            'url': res.reqpath,
+            'reqhead': res.reqhead,
+            'reqbody': res.reqbody,
+            'rsphead': res.rsphead,
+            'rspbody': res.rspbody,
+            'reason': res.diff,
+            'time': res.ts
+        }
+        resultlist.append(data)
+
+    return render_template("result.html", resp = resultlist)
 
 
 @app.route('/getResult/<id>')

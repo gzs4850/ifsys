@@ -64,7 +64,7 @@ class Runner(object):
             self.http_client_session = self.http_client_session or requests.Session()
         self.context.register_request(request_config, level)
 
-    def run_test(self, testcase):
+    def run_test(self, testcase, runNum):
         """ run single testcase.
         @param (dict) testcase
             {
@@ -89,6 +89,7 @@ class Runner(object):
         @return (tuple) test result of single testcase
             (success, diff_content_list)
         """
+
         self.init_config(testcase, level="testcase")
         parsed_request = self.context.get_parsed_request()
 
@@ -119,14 +120,19 @@ class Runner(object):
                 validators, self.context.get_testcase_variables_mapping())
 
             testResult = 0
-            mockid = _ + 1
+            # mockid = mockid + 1
+            diff = str(diff_content_list)
             casename = testcase.get("name")
             if not diff_content_list:
+                diff = {""}
                 testResult = 1
-            sql = "insert into auto_result(mockid,name,testresult,rspcode,reqpath,reqhead,reqbody,rsphead,rspbody,ts) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+
+            sql = "insert into auto_result(mockid,name,testresult,reqmethod,rspcode,reqpath,reqhead,reqbody,rsphead,rspbody,diff,ts) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             params = (
-            mockid, casename, testResult, resp.status_code, resp.request.url, resp.request.headers, resp.request.body,
-            resp.headers, resp.content, datetime.datetime.now())
+                runNum, casename, testResult, resp.request.method, resp.status_code, resp.request.url, resp.request.headers,
+                resp.request.body,
+                resp.headers, resp.content, diff, datetime.datetime.now())
+
             count = db.updateByParam(sql, params)
             print count
 

@@ -110,7 +110,7 @@ class ResponseObject(object):
             if type(expect) == str and expect.startswith('sql'):
                 expect = expect.split(':')[1]
                 field = expect.split(" ")[1]
-                count = db.selectdev(expect)
+                count = db.select(expect)
                 for row in count:
                     #print row[field]
                     validator_dict["expected"] = row[field]

@@ -16,7 +16,9 @@ class ApiTestCase(unittest.TestCase):
     def runTest(self):
         """ run testcase and check result.
         """
-        result = self.test_runner.run_test(self.testcase)
+        runNum = self._resultForDoCleanups.testsRun
+
+        result = self.test_runner.run_test(self.testcase, runNum)
         self.assertEqual(result, (True, []))
 
 def create_suite(testset):

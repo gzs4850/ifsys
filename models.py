@@ -9,12 +9,14 @@ class Result(db.Model):
     mockid = db.Column(db.Integer)
     name = db.Column(db.String(150))
     testresult = db.Column(db.Boolean)
+    reqmethod = db.Column(db.String(10))
     rspcode = db.Column(db.String(10))
     reqpath = db.Column(db.String(100))
     reqhead = db.Column(db.Text)
     reqbody = db.Column(db.Text)
     rsphead = db.Column(db.Text)
     rspbody = db.Column(db.Text)
+    diff = db.Column(db.Text)
     ts = db.Column(db.DateTime(), default=datetime.datetime.utcnow())
 
 class avlDept(db.Model):
