@@ -23,7 +23,7 @@ except NameError:
     string_type = str
     PYTHON_VERSION = 3
 
-SECRET_KEY = "DebugTalk"
+SECRET_KEY = "ZLST"
 
 def gen_random_string(str_len):
     return ''.join(

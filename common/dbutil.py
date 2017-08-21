@@ -1,7 +1,7 @@
 #encoding:utf-8
 
 import MySQLdb
-import cx_Oracle
+
 
 class MysqldbHelper:
 

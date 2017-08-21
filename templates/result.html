@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>接口测试结果</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <style>
+        pre {
+            outline: 1px solid #ccc;
+            padding: 5px;
+            margin: 5px;
+        }
+
+        .string {
+            color: green;
+        }
+
+        .number {
+            color: darkorange;
+        }
+
+        .boolean {
+            color: blue;
+        }
+
+        .null {
+            color: magenta;
+        }
+
+        .key {
+            color: red;
+        }
+    </style>
+
+
+    <script>
+        $("#result").text(JSON.stringfy(data));
+        function syntaxHighlight(json) {
+            if (typeof json != 'string') {
+                json = JSON.stringify(json, undefined, 2);
+            }
+            json = json.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                var cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'key';
+                    } else {
+                        cls = 'string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            })}
+
+    </script>
+
+
+</head>
+<body>
+
+<div class="container">
+    <div>
+        <h3 class="text-center">接口测试结果</h3>
+    </div>
+    <div>
+        {% for res in resp %}
+            <strong>{{ res.name }}</strong>&nbsp;&nbsp;{{ res.reqmethod }}
+            &nbsp;&nbsp;{{ res.url }}&nbsp;&nbsp;
+            {% if res.result %}
+            <span class="label label-success">成功</span>
+            {% else %}
+            <span class="label label-danger">失败</span>
+            {% endif %}
+            &nbsp;{{ res.time }}
+            <br>
+            {% if not res.result %}
+            失败原因：<pre>{{ res.reason }}</pre>
+            {% endif %}
+
+
+
+            具体响应：<pre id="result">{{ res.rspbody }}</pre>
+            <hr/>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>

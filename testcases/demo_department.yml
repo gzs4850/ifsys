@@ -1,0 +1,63 @@
+- config:
+    name: "department testsets."
+    import_module_functions:
+        - tests.data.custom_functions
+    request:
+        base_url: http://192.168.10.241:7100
+
+- test:
+    name: 添加部门
+#    variable_binds:
+#        - deptCode: ${gen_random_string(40)}
+    request:
+        url: /system/departments
+        method: POST
+        files:
+            deptName: ${gen_random_string(20)}
+            deptCode: ${gen_random_string(40)}
+            isRoot: "1"
+            seq: "2"
+    validators:
+        - {"check": "content.resultCode", "comparator": "eq", "expected": 1}
+#        - {"check": "content.data.0.id", "comparator": "str_eq", "expected": "sql:select id from sys_department  ORDER BY lastupdate_time desc LIMIT 1;"}
+
+- test:
+    name: 添加已经存在的部门
+    request:
+        url: /system/departments
+        method: POST
+        files:
+            deptName: "10028"
+            deptCode: "D10026"
+            isRoot: "1"
+            seq: "2"
+    validators:
+        - {"check": "content.resultCode", "comparator": "eq", "expected": 0}
+        - {"check": "content.resultMsg", "comparator": "str_eq", "expected": "该部门名称已存在"}
+
+- test:
+    name: 查询所有的部门
+    request:
+        url: /system/departments
+        method: GET
+    extract_binds:
+        - deptID: content.data.0.id
+    validators:
+        - {"check": "content.resultCode", "comparator": "eq", "expected": 1}
+#        - {"check": "content.resultCode", "comparator": "ne", "expected": "sql:SELECT count(*) FROM auto_result where id = '73'"}
+
+- test:
+    name: 查询指定的部门
+    request:
+        url: /system/departments/$deptID/users
+        method: GET
+    validators:
+        - {"check": "content.resultCode", "comparator": "eq", "expected": 1}
+
+- test:
+    name: 删除指定的部门
+    request:
+        url: /system/departments/$deptID/
+        method: DELETE
+    validators:
+        - {"check": "content.resultCode", "comparator": "eq", "expected": 1}

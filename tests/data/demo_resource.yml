@@ -1,0 +1,90 @@
+- config:
+    name: "resource testsets."
+    import_module_functions:
+        - tests.data.custom_functions
+    request:
+        base_url: http://192.168.10.241:7100
+
+- test:
+    name: 新增资源
+    request:
+        url: /system/resource
+        method: POST
+        files:
+            resContent: ${gen_random_string(21)}
+            resDesc: ${gen_random_string(41)}
+            resName: "1"
+            resType: "2"
+            serviceName: "service1"
+    validators:
+        - {"check": "content.resultCode", "comparator": "eq", "expected": 1}
+
+- test:
+    name: 新增菜单资源
+    request:
+        url: /system/resource
+        method: POST
+        files:
+            resContent: "content"
+            resDesc: "description"
+            resName: "resource"
+            resType: "M"
+            serviceName: "servicename"
+    validators:
+        - {"check": "content.resultCode", "comparator": "eq", "expected": 1}
+        
+- test:
+    name: 新增接口资源
+    request:
+        url: /system/resource
+        method: POST
+        files:
+            resContent: "content"
+            resDesc: "description"
+            resName: "resource"
+            resType: "I"
+            serviceName: "servicename"
+    validators:
+        - {"check": "content.resultCode", "comparator": "eq", "expected": 1}
+        
+- test:
+    name: 新增按钮资源
+    request:
+        url: /system/resource
+        method: POST
+        files:
+            resContent: "content"
+            resDesc: "description"
+            resName: "resource"
+            resType: "B"
+            serviceName: "servicename"
+    validators:
+        - {"check": "content.resultCode", "comparator": "eq", "expected": 1}
+        
+- test:
+    name: 请求字段为空时新增资源
+    request:
+        url: /system/resource
+        method: POST
+        files:
+            resContent: ""
+            resDesc: ""
+            resName: ""
+            resType: ""
+            serviceName: ""
+    validators:
+        - {"check": "content.resultCode", "comparator": "eq", "expected": 0}
+        
+- test:
+    name: 请求字段超过限制长度时新增资源
+    request:
+        url: /system/resource
+        method: POST
+        files:
+            resContent: "/system/role,post"
+            resDesc: "描述"
+            resName: "名称"
+            resType: "ABC"
+            serviceName: "获取角色"
+    validators:
+        - {"check": "content.resultCode", "comparator": "eq", "expected": 0}
