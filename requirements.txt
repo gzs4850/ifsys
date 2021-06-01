@@ -27,5 +27,5 @@ requests-ntlm==1.0.0
 six==1.10.0
 SQLAlchemy==1.1.13
 termcolor==1.1.0
-urllib3==1.22
+urllib3==1.26.5
 Werkzeug==0.12.2
